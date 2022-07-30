@@ -12,7 +12,7 @@ const NavLinkRoot = styled(NextLinkComposed)(({ theme, size }) => ({
   fontFamily: theme.typography.h1.fontFamily,
   padding: theme.spacing(2, 4),
   fontSize: theme.typography.pxToRem(14),
-  boxShadow: 'none',
+  boxShadow: 'none', 
   '&:active, &:focus': {
     boxShadow: 'none',
   },

@@ -1,9 +1,15 @@
 import React from 'react'
+import AppBar from '../../components/AppBar';
+import AppFooter from "../../components/AppFooter";
 
-const index = () => {
+const SiteIndex = () => {
   return (
-    <div>asdf</div>
+    <>
+    <AppBar />
+    <div>Features</div>
+    <AppFooter />
+    </>
   )
 }
 
-export default index
+export default SiteIndex

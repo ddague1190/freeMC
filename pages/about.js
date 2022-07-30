@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Markdown from '../src/components/elements/Markdown';
-import Typography from '../src/components/elements/Typography';
-import AppAppBar from '../src/components/AppBar';
-import AppFooter from '../src/components/AppFooter';
+import Markdown from '../components/elements/Markdown';
+import Typography from '../components/elements/Typography';
+import AppAppBar from '../components/AppBar';
+import AppFooter from '../components/AppFooter';
 import privacy from '../data/markdown/privacy.md';
 import { Grid } from "@mui/material";
 
@@ -17,10 +17,10 @@ export default function Privacy() {
       <Box sx={{ mt: 7, mb: { xs: 10, md: 20 } }}>
 
         <Typography variant="h4" gutterBottom marked="left" >
-          Mission statement
+          About
         </Typography>
         <Typography variant="h5" gutterBottom marked="center" >
-          I am a programmer and veteran motorcyclist. My brother - pictured above - was a race mechanic who dreamed of opening his own motorcycle shop. He passed away while riding. Thus this project is personal. However - first and foremost - this project is an exercise in engineering cloud-based software to serve a specialized business need. I will maintain this platform indefinitely.
+          I am a programmer and veteran motorcyclist. My brother - pictured below - was a race mechanic who dreamed of opening his own motorcycle shop. He passed away while riding. Thus this project is personal. However - first and foremost - this project is an exercise in engineering cloud-based software to serve a specialized business need. I will maintain this platform indefinitely.
         </Typography>
         </Box>
         <Box sx={{ mt: 7, mb: { xs: 10, md: 20 } }}>
@@ -40,7 +40,7 @@ export default function Privacy() {
                 }}
               >
                 <Typography variant='h5'>
-                  I believe that the world would be a better place if more people rode motorcycles. This project is those who make it their business to bring this vision to actuality.
+                  I believe that the world would be a better place if more people rode motorcycles. I hope this project will help one person who makes it their business to bring this vision to actuality.
                 </Typography>
               </Box>
             </Grid>

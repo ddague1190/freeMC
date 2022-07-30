@@ -7,17 +7,23 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "./elements/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Link, {NextLinkComposed} from "./elements/Link";
 import NavLink from './elements/NavLink';
 import AdbIcon from "@mui/icons-material/Adb";
 const pages = ["Features", "Tutorials", "Pricing", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { showNotification, notificationSelector } from "../store/notification/notification";
+import { useDispatch, useSelector } from "react-redux";
+import SnackBar from "./elements/SnackBar";
+
 
 const ResponsiveAppBar = () => {
+
+  const dispatch = useDispatch();
+
+  const { messageNotification, isShownNotification } = useSelector(notificationSelector);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -40,7 +46,12 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  
+
   return (
+    <>
+
+    <SnackBar open={isShownNotification} message={messageNotification} />
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -49,7 +60,7 @@ const ResponsiveAppBar = () => {
           {/* md and larger screens */}
           <NextLinkComposed
             variant="h6"
-            noWrap
+            nowrap="true"
             component="a"
             to="/"
             sx={{
@@ -95,7 +106,7 @@ const ResponsiveAppBar = () => {
               }}>
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <NextLinkComposed sx={{'textDecoration': 'none', 'color': 'black'}} to={`/${page.toLowerCase()}`} textAlign="center">{page}</NextLinkComposed>
+                  <NextLinkComposed sx={{'textDecoration': 'none', 'color': 'black'}} to={`/${page.toLowerCase()}`} textalign="center">{page}</NextLinkComposed>
                 </MenuItem>
               ))}
             </Menu>
@@ -105,7 +116,7 @@ const ResponsiveAppBar = () => {
           <AdbIcon sx={{display: {xs: "flex", md: "none"}, mr: 1}} />
           <NextLinkComposed
             variant="h5"
-            noWrap
+            nowrap="true"
             component="a"
             to=""
             sx={{
@@ -125,7 +136,6 @@ const ResponsiveAppBar = () => {
               <NavLink
                 to={`/${page.toLowerCase()}`}
                 key={page}
-
                 onClick={handleCloseNavMenu}
                 sx={{my: 2, color: "white", display: "block"}}>
                 {page}
@@ -134,16 +144,18 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{flexGrow: 0, gap: '5px',  }}>
-              <NavLink to='/sign-in' sx={{bgcolor: 'secondary.main'}}>
+              <NavLink to='/sign-in' sx={{color: 'white', bgcolor: 'secondary.main'}}>
                 Sign In
               </NavLink>
               <NavLink sx={{color: 'white'}} to='/sign-up'>
-                SIGN UP
+                Sign Up
               </NavLink>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
+    </>
+
   );
 };
 export default ResponsiveAppBar;

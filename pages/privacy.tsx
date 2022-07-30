@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Markdown from '../src/components/elements/Markdown';
-import Typography from '../src/components/elements/Typography';
-import AppAppBar from '../src/components/AppBar';
-import AppFooter from '../src/components/AppFooter';
+import Markdown from '../components/elements/Markdown';
+import Typography from '../components/elements/Typography';
+import AppAppBar from '../components/AppBar';
+import AppFooter from '../components/AppFooter';
 import privacy from '../data/markdown/privacy.md';
 
 export default function Privacy() {

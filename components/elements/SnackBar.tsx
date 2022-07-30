@@ -7,6 +7,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
 import IconButton from '@mui/material/IconButton';
 import { TransitionProps } from '@mui/material/transitions/transition';
+import { useDispatch, useSelector } from "react-redux";
+import { hideNotification } from '../../store/notification';
 
 const styles = ({ theme }: { theme: Theme }) =>
   ({
@@ -49,16 +51,23 @@ interface ExtraSnackbarProps {
 }
 
 function Snackbar(props: SnackbarProps & ExtraSnackbarProps) {
-  const { message, closeFunc, ...other } = props;
+  const dispatch = useDispatch();
+  
+  const { message, ...other } = props;
+  const closeFunc = () => {
+
+    dispatch(hideNotification())
+  };
   const classes = {
     info: 'MuiSnackbarContent-info',
     close: 'MuiSnackbarContent-close',
   };
 
+
   return (
     <MuiSnackbar
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      autoHideDuration={6000}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      autoHideDuration={3000}
       TransitionComponent={Transition}
       message={
         <React.Fragment>

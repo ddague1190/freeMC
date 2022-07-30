@@ -1,61 +1,83 @@
-import * as React from 'react';
-import { Field, Form, FormSpy } from 'react-final-form';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Typography from '../src/components/elements/Typography';
-import AppFooter from '../src/components/AppFooter';
-import AppBar from '../src/components/AppBar';
-import AppForm from '../src/components/AppForm';
-import { email, required } from '../lib/utils/emailValidation';
-import RFTextField from '../src/components/form/RFTextField';
-import FormButton from '../src/components/form/FormButton';
-import FormFeedback from '../src/components/form/FormFeedback';
+import * as React from "react";
+import {Field, Form, FormSpy} from "react-final-form";
+import Box from "@mui/material/Box";
+import Link from "../components/elements/Link";
+import Typography from "../components/elements/Typography";
+import AppFooter from "../components/AppFooter";
+import AppBar from "../components/AppBar";
+import AppForm from "../components/AppForm";
+import {email, required} from "../utils/emailValidation";
+import RFTextField from "../components/form/RFTextField";
+import FormButton from "../components/form/FormButton";
+import FormFeedback from "../components/form/FormFeedback";
+import {useRouter} from "../node_modules/next/router";
+import {signIn} from "next-auth/react";
+import Button from "@mui/material/Button";
+import {visuallyHidden} from "@mui/utils";
+import axios from 'axios';
+
+async function createUser(email, password) {
+  const response = await fetch("/api/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({email, password}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+
+  return data;
+}
 
 export default function SignIn() {
   const [sent, setSent] = React.useState(false);
+  const router = useRouter();
 
-  const validate = (values: { [index: string]: string }) => {
+  const validate = (values: {[index: string]: string}) => {
     const errors = required(['email', 'password'], values);
-
     if (!errors.email) {
       const emailError = email(values.email);
       if (emailError) {
         errors.email = emailError;
       }
     }
-
     return errors;
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const handleSubmit = (values) => {
+    // setSent(true);
+
   };
 
-  return (<React.Fragment>
+  return (
+    <>
       <AppBar />
       <AppForm>
-        <React.Fragment>
+        <>
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Sign In
           </Typography>
           <Typography variant="body2" align="center">
-            {'Not a member yet? '}
-            <Link
-              href="/sign-up"
-              align="center"
-              underline="always"
-            >
-              Sign Up here
-            </Link>
+            {"Not a member yet? "}
+            <Link href="/sign-up">Sign Up here</Link>
           </Typography>
-        </React.Fragment>
+        </>
+
         <Form
           onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box component="form" onSubmit={handleSubmit2} noValidate sx={{ mt: 6 }}>
+          subscription={{submitting: true}}
+          validate={validate}>
+          {({handleSubmit: handleSubmit2, submitting}) => (
+            <Box
+              component="form"
+              onSubmit={handleSubmit2}
+              noValidate
+              sx={{mt: 6}}>
               <Field
                 autoComplete="email"
                 autoFocus
@@ -80,23 +102,22 @@ export default function SignIn() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
+              <FormSpy subscription={{submitError: true}}>
+                {({submitError}) =>
                   submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
+                    <FormFeedback error sx={{mt: 2}}>
                       {submitError}
                     </FormFeedback>
                   ) : null
                 }
               </FormSpy>
               <FormButton
-                sx={{ mt: 3, mb: 2 }}
+                sx={{mt: 3, mb: 2}}
                 disabled={submitting || sent}
                 size="large"
                 color="secondary"
-                fullWidth
-              >
-                {submitting || sent ? 'In progress…' : 'Sign In'}
+                fullWidth>
+                {submitting || sent ? "In progress…" : "Sign In"}
               </FormButton>
             </Box>
           )}
@@ -108,8 +129,6 @@ export default function SignIn() {
         </Typography>
       </AppForm>
       <AppFooter />
-    </React.Fragment>
+    </>
   );
 }
-
-

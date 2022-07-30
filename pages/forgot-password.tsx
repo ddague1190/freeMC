@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
-import Typography from '../src/components/elements/Typography';
-import AppFooter from '../src/components/AppFooter';
-import AppBar from '../src/components/AppBar';
-import AppForm from '../src/components/AppForm';
-import { email, required } from '../lib/utils/emailValidation';
-import RFTextField from '../src/components/form/RFTextField';
-import FormButton from '../src/components/form/FormButton';
-import FormFeedback from '../src/components/form/FormFeedback';
+import Typography from '../components/elements/Typography';
+import AppFooter from '../components/AppFooter';
+import AppBar from '../components/AppBar';
+import AppForm from '../components/AppForm';
+import { email, required } from '../utils/emailValidation';
+import RFTextField from '../components/form/RFTextField';
+import FormButton from '../components/form/FormButton';
+import FormFeedback from '../components/form/FormFeedback';
 
 export default function ForgotPassword() {
   const [sent, setSent] = React.useState(false);

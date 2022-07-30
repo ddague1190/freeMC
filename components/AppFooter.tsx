@@ -60,16 +60,16 @@ export default function AppFooter() {
               sx={{ height: 120 }}
             >
               <Grid item sx={{ display: 'flex' }}>
-                <Box component="a" href="https://mui.com/" sx={iconStyle}>
+                <Box component="a" href="" sx={iconStyle}>
                   <img
-                    src="/static/themes/onepirate/appFooterFacebook.png"
-                    alt="Facebook"
+                    src=""
+                    alt=""
                   />
                 </Box>
-                <Box component="a" href="https://twitter.com/MUI_hq" sx={iconStyle}>
+                <Box component="a" href="" sx={iconStyle}>
                   <img
-                    src="/static/themes/onepirate/appFooterTwitter.png"
-                    alt="Twitter"
+                    src=""
+                    alt=""
                   />
                 </Box>
               </Grid>
