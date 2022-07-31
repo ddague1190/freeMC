@@ -2,7 +2,7 @@ import React from 'react'
 import AppBar from '../../components/AppBar';
 import AppFooter from "../../components/AppFooter";
 
-const SiteIndex = () => {
+const FeaturesIndexPage = () => {
   return (
     <>
     <AppBar />
@@ -12,4 +12,4 @@ const SiteIndex = () => {
   )
 }
 
-export default SiteIndex
+export default FeaturesIndexPage

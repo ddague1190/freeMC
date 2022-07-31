@@ -7,7 +7,7 @@ import AppAppBar from '../components/AppBar';
 import AppFooter from '../components/AppFooter';
 import privacy from '../data/markdown/privacy.md';
 
-export default function Privacy() {
+export default function PrivacyPage () {
   return (
     <React.Fragment>
       <AppAppBar />

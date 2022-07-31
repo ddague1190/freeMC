@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
         const db = await getMongoDb();
         const existingUser = await db.collection('users').findOne({ 'email': email })
-        console.log(existingUser)
+
         if (existingUser) {
             res.status(422).json({
                 message: [

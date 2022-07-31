@@ -7,10 +7,10 @@ import ProductCategories from '../components/ProductCategories';
 import ProductHowItWorks from '../components/ProductHowItWorks';
 import ProductSmokingHero from '../components/ProductSmokingHero';
 import AppFooter from '../components/AppFooter';
-import getMongoDb from "../utils/db/mongodb";
 
 
-function Index(props) {
+
+function HomePage(props) {
   return (
     <>
       <div id="back-to-top-anchor" />
@@ -27,17 +27,11 @@ function Index(props) {
 }
 
 export async function getServerSideProps(context) {
-  const db = await getMongoDb();
-  const u = await db.collection('users').find({}).toArray()
-  
 
-  
-
-  return {
+    return {
     props: {
-
     }
   }
 }
 
-export default Index;
+export default HomePage;

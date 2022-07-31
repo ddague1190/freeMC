@@ -1,9 +1,12 @@
 import { combineReducers } from "redux"
 import { todoReducer } from "./todo/reducer";
-import { notificationReducer } from "./notification";
+import { notificationReducer } from "./notification/notification";
+import { userInfoReducer } from "./user-info/user-info";
+import { adminRouteReducer } from "./admin-route/admin-route";
 
 export const rootReducer = combineReducers({
-    todo: todoReducer,
+    adminRoute: adminRouteReducer,
+    userInfo: userInfoReducer,
     notification: notificationReducer
 })
 

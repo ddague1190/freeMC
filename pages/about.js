@@ -9,7 +9,7 @@ import privacy from '../data/markdown/privacy.md';
 import { Grid } from "@mui/material";
 
 
-export default function Privacy() {
+export default function AboutPage() {
   return (
     <React.Fragment>
       <AppAppBar />

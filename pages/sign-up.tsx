@@ -11,7 +11,6 @@ import {email, required} from "../utils/emailValidation";
 import RFTextField from "../components/form/RFTextField";
 import FormButton from "../components/form/FormButton";
 import FormFeedback from "../components/form/FormFeedback";
-import {NextLinkComposed} from "../components/elements/Link";
 import axios from "axios";
 import { FORM_ERROR } from 'final-form'
 import { useRouter } from "../node_modules/next/router";
@@ -22,7 +21,7 @@ const config = {
   headers: {
     "Content-type": "application/json",
   },
-};
+};  
 
 export default function SignUp() {
   const dispatch = useDispatch();

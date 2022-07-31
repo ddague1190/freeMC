@@ -7,17 +7,30 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../styles/themes/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import { wrapper } from "../store/configureStore";
-import { SessionProvider } from 'next-auth/react';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setUserInfo } from '../store/user-info/user-info';
 
+async function checkForLoggedInUser(dispatch) {
+  const { data } = await axios.get('/api/user/');
+  if(data.user) {
+    dispatch(setUserInfo(data.user))
+  }
+}
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
 function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, ...rest }) {
+  const dispatch = useDispatch();
 
+  React.useEffect(()=>{
+    checkForLoggedInUser(dispatch)
+  }, [])
+  
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <>
       <CacheProvider value={emotionCache}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -28,7 +41,7 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, ..
           <Component {...pageProps} />
         </ThemeProvider>
       </CacheProvider>
-    </SessionProvider>
+    </>
   );
 }
 

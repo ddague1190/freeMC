@@ -11,35 +11,24 @@ import RFTextField from "../components/form/RFTextField";
 import FormButton from "../components/form/FormButton";
 import FormFeedback from "../components/form/FormFeedback";
 import {useRouter} from "../node_modules/next/router";
-import {signIn} from "next-auth/react";
-import Button from "@mui/material/Button";
-import {visuallyHidden} from "@mui/utils";
-import axios from 'axios';
+import axios from "axios";
+import { FORM_ERROR } from 'final-form';
+import { useDispatch } from 'react-redux';
+import { showNotification } from "../store/notification/notification";
+import { setUserInfo } from "../store/user-info/user-info";
 
-async function createUser(email, password) {
-  const response = await fetch("/api/auth/signup", {
-    method: "POST",
-    body: JSON.stringify({email, password}),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong!");
-  }
-
-  return data;
-}
+const config = {
+  headers: {
+    "Content-type": "application/json",
+  },
+};
 
 export default function SignIn() {
   const [sent, setSent] = React.useState(false);
   const router = useRouter();
-
+  const dispatch = useDispatch();
   const validate = (values: {[index: string]: string}) => {
-    const errors = required(['email', 'password'], values);
+    const errors = required(["email", "password"], values);
     if (!errors.email) {
       const emailError = email(values.email);
       if (emailError) {
@@ -49,9 +38,38 @@ export default function SignIn() {
     return errors;
   };
 
-  const handleSubmit = (values) => {
-    // setSent(true);
+  const handleSubmit = async (values) => {
+    setSent(true);
+    try {
+      const response = await axios.post("/api/sign-in/", {values}, config);
+      console.log(response)
+      if (response.status === 200) {
 
+        dispatch(setUserInfo(response.data.user));
+        setTimeout(() => {
+          dispatch(
+            showNotification(
+              "Authentication successful."
+            )
+          );
+        }, 1000);
+        router.push("/admin");
+      } else {
+        return {[FORM_ERROR]: "Something went wrong"};
+      }
+    } catch (error) {
+      const errData = error.response?.data;
+
+      if (errData?.message) {
+        let err = {};
+        errData.message.forEach((el) => {
+          err = {...err, ...el};
+        });
+
+        setSent(false);
+        return err;
+      }
+    }
   };
 
   return (
