@@ -67,7 +67,7 @@ const itemCategory = {
 
 export default function Navigator(props: DrawerProps) {
   const {...other} = props;
-  const {adminRoute} = useSelector(adminRouteSelector);
+  const {route} = useSelector(adminRouteSelector);
   const dispatch = useDispatch();
 
   return (
@@ -82,8 +82,8 @@ export default function Navigator(props: DrawerProps) {
               <ListItemText sx={{color: "#fff"}}>{id}</ListItemText>
             </ListItem>
             {children.map(({id: childId, icon, active}) => (
-              <ListItem disablePadding key={childId} onClick={()=>dispatch(changeRoute(slugify(childId)))}>
-                <ListItemButton selected={slugify(childId) === adminRoute } sx={item}>
+              <ListItem disablePadding key={childId} onClick={()=>dispatch(changeRoute({route: slugify(childId)}))}>
+                <ListItemButton selected={slugify(childId) === route } sx={item}>
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText>{childId}</ListItemText>
                 </ListItemButton>

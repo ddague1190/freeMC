@@ -11,6 +11,7 @@ const PaperRoot = styled(MuiPaper, {
   shouldForwardProp: (prop) => prop !== 'background' && prop !== 'padding',
 })<ExtraPaperProps>(({ theme, background, padding }) => ({
   backgroundColor: theme.palette.secondary[background],
+  position: "relative",
   ...(padding && {
     padding: theme.spacing(1),
   }),

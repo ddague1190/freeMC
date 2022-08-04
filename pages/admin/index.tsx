@@ -1,33 +1,24 @@
 import * as React from 'react';
-import AppBar from "../../components/AppBar";
-import AppFooter from "../../components/AppFooter";
-import {TodoList} from "../../components/test/TodoList";
-import IconButton from "@mui/material/IconButton";
-import Close from "@mui/icons-material/Close";
+import getMongoDb from '../../utils/db/mongodb';
 import {withIronSessionSsr} from "iron-session/next";
 import {ironOptions} from "../../constants/ironOptions";
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import Paperbase from "../../components/admin/Paperbase";
 import Header from "../../components/admin/Header";
 import Content from "../../components/admin/Content";
 import Navigator from "../../components/admin/Navigator";
 import Copyright from "../../components/admin/Copyright";
-import { useSelector, useDispatch } from 'react-redux';
-import { changeRoute, adminRouteSelector } from "../../store/admin-route/admin-route";
 import adminTheme from "../../styles/themes/themeAdmin";
-import {  ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import {NextPage} from 'next';
+import {connect} from 'react-redux';
+import { setUserInfo } from '../../store/user-info/user-info';
+import { wrapper, RootState } from '../../store/configureStore';
 
 
 
 const drawerWidth = 256;
 
-const AdminPage = (props) => {
-  const dispatch = useDispatch();
-  const { adminRoute } = useSelector(adminRouteSelector);
-
-  
+const AdminPage = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(adminTheme.breakpoints.up('sm'));
 
@@ -37,7 +28,7 @@ const AdminPage = (props) => {
 
 
   return (
-    <ThemeProvider theme={adminTheme}>
+
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <Box
           component="nav"
@@ -66,28 +57,37 @@ const AdminPage = (props) => {
           </Box>
         </Box>
       </Box>
-    </ThemeProvider>
   );
 };
 
-export const getServerSideProps = withIronSessionSsr(
-  async function getServerSideProps({req}) {
-    const user = req.session.user;
 
-    console.log(user);
-    if (!user) {
-      redirect: {
+export const getServerSideProps = withIronSessionSsr(wrapper.getServerSideProps(store =>async ({req, res, ...etc}) => {
+  const user = req.session.user;
 
-      }
-    }
+  const db = await getMongoDb();
+}), ironOptions);
 
-    return {
-      props: {
-        user: req.session.user,
-      },
-    };
-  },
-  ironOptions
-);
+export default connect((state: RootState) => state)(AdminPage);
 
-export default AdminPage;
+// export const getServerSideProps = withIronSessionSsr(
+//   async function getServerSideProps({req}) {
+//     const user = req.session.user;
+//     const db = await getMongoDb();
+//     const store
+
+//     if (!user) {
+//       redirect: {
+
+//       }
+//     }
+
+//     return {
+//       props: {
+//         user: req.session.user,
+//       },
+//     };
+//   },
+//   ironOptions
+// );
+
+// export default AdminPage;

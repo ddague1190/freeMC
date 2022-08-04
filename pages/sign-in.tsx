@@ -85,7 +85,7 @@ export default function SignIn() {
             <Link href="/sign-up">Sign Up here</Link>
           </Typography>
         </>
-
+ 
         <Form
           onSubmit={handleSubmit}
           subscription={{submitting: true}}
@@ -106,7 +106,7 @@ export default function SignIn() {
                 margin="normal"
                 name="email"
                 required
-                size="large"
+                size="large" 
               />
               <Field
                 fullWidth

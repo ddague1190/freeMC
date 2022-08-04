@@ -12,8 +12,12 @@ import Tabs from "@mui/material/Tabs";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import {useSelector} from "react-redux";
-import {adminRouteSelector} from "../../store/admin-route/admin-route";
+import {useSelector, useDispatch} from "react-redux";
+import {
+  adminRouteSelector,
+  changeTab,
+} from "../../store/admin-route/admin-route";
+import slugify from "slugify";
 
 const lightColor = "rgba(255, 255, 255, 0.7)";
 
@@ -21,79 +25,11 @@ interface HeaderProps {
   onDrawerToggle: () => void;
 }
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "Createupdate-receipt":
-      return {
-        heading: "Receipts",
-        tabs: ["Create", "Update"],
-      };
-    case "Reports":
-      return {
-        heading: "Reports",
-        tabs: ["Sales", "Customer reviews"],
-      };
-    case "Customers":
-      return {
-        heading: "Customers",
-        tabs: ["With open orders", "All"],
-      };
-    case "Customer's-bikes":
-      return {
-        heading: "Serviced motorcycles",
-        tabs: ["Active", "Completed"],
-      };
-    case "Bikes-for-sale":
-      return {
-        heading: "Inventory",
-        tabs: ["New", "Pre-owned"],
-      };
-    case "Receipts":
-      return {
-        heading: "Receipt",
-        tabs: ["Pending work", "Payment required", "Past work"],
-      };
-    case "Inventory":
-      return {
-        heading: "Other inventory",
-        tabs: ["Parts", "Accessories", "Gear", "Tires"],
-      };
-    case "Update-shop-info":
-      return {
-        heading: "General information",
-        tabs: [""],
-      };
-    case "Customize-website":
-      return {
-        heading: "Website parameters",
-        tabs: [""],
-      };
-    case "Pages":
-      return {
-        heading: "Website pages",
-        tabs: [""],
-      };
-    case "Open website":
-      return initialState;
-    default:
-      return initialState;
-  }
-};
-
-const initialState = {
-  heading: "Admin Home",
-  tabs: [],
-};
-
 export default function Header(props: HeaderProps) {
-  const [highlightedTabIndex, setHighlightedTabIndex] = React.useState(0);
-  const [headerState, headerDispatch] = React.useReducer(reducer, initialState);
-  const {adminRoute} = useSelector(adminRouteSelector);
+  const dispatch = useDispatch();
+  const adminRouteData = useSelector(adminRouteSelector);
   const {onDrawerToggle} = props;
-  React.useEffect(() => {
-    setHighlightedTabIndex(0);
-    headerDispatch({type: adminRoute});
-  }, [adminRoute]);
+
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}>
@@ -109,23 +45,6 @@ export default function Header(props: HeaderProps) {
               </IconButton>
             </Grid>
             <Grid item xs />
-            {/* <Grid item>
-              <Link
-                href="/"
-                variant="body2"
-                sx={{
-                  textDecoration: 'none',
-                  color: lightColor,
-                  '&:hover': {
-                    color: 'common.white',
-                  },
-                }}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Go to docs
-              </Link>
-            </Grid> */}
             <Grid item>
               <Tooltip title="Alerts • No alerts">
                 <IconButton color="inherit">
@@ -152,21 +71,21 @@ export default function Header(props: HeaderProps) {
           <Grid container alignItems="center" spacing={1}>
             <Grid item xs>
               <Typography color="inherit" variant="h5" component="h1">
-                {headerState.heading}
+                {adminRouteData.heading}
               </Typography>
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{zIndex: 0}}>
-        <Tabs value={highlightedTabIndex} textColor="inherit">
-          {headerState.tabs.map((tab, index) => {
+        <Tabs value={adminRouteData.selectedTabIndex} textColor="inherit">
+          {adminRouteData.tabs.length > 1 && adminRouteData.tabs.map(({tab}, index) => {
             return (
               <Tab
                 label={tab}
                 key={index}
                 onClick={() => {
-                  setHighlightedTabIndex(index);
+                  dispatch(changeTab({index: index}));
                 }}
               />
             );
