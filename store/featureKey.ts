@@ -6,5 +6,7 @@ export const FeatureKey = {
     USERINFO: "USERINFO",
     NOTIFICATION: "NOTIFICATION",
     TODO: "TODO",
+    STOREINFO: "STOREINFO",
+    CUSTOMERS: "CUSTOMERS"
 } as const
   

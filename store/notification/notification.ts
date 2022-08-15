@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, ActionReducerMapBuilder } from "@reduxjs/toolkit";
 import { FeatureKey } from "../featureKey";
 import { RootState } from "../reducers";
-
+import { StoreInfoState } from "../store-info/state";
+import { editStoreInfoAction } from "../store-info/action";
 /**
  * Payload
  */
@@ -45,6 +46,15 @@ const slice = createSlice({
             }
         }
     },
+    extraReducers: (builder : ActionReducerMapBuilder<any>) => {
+        builder
+        .addCase(editStoreInfoAction.fulfilled, (state: StoreInfoState, action: PayloadAction<StoreInfoState>) => { 
+            return {
+                messageNotification: 'Update successful',
+                isShownNotification: true
+            }
+        })
+    }
 })
 
 /**

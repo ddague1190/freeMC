@@ -4,11 +4,16 @@ import { RootState } from "../reducers";
 import Welcome from "../../components/admin/content/Welcome";
 import NewUserForm from "../../components/admin/content/NewUserForm";
 import ShopInfoForm from "../../components/admin/content/ShopInfoForm";
+import AllCustomerRecords from "../../components/admin/content/AllCustomersRecords";
+import AddCustomerForm from "../../components/admin/content/AddCustomerForm";
 
 export const COMPONENT_MAP = {
     'Welcome': Welcome,
     'NewUserForm': NewUserForm,
-    'ShopInfoForm': ShopInfoForm
+    'ShopInfoForm': ShopInfoForm,
+    'AllCustomerRecords': AllCustomerRecords,
+    'AddCustomerForm': AddCustomerForm
+
 }
 const adminRouteData = {
     'Createupdate-receipt': {
@@ -37,8 +42,16 @@ const adminRouteData = {
         heading: "Customers",
         tabs: [
             {
-                tab: "",
-                component: "Welcome"
+                tab: "Existing records",
+                component: "AllCustomerRecords"
+            },
+            {
+                tab: "Detail view",
+                component: "AllCustomerRecords"
+            },
+            {
+                tab: "New",
+                component: "AddCustomerForm"
             }
         ],
     },
@@ -170,18 +183,24 @@ export type AdminRouteState = {
     heading: string,
 }
 
-const initialState: AdminRouteState = {
-    route: 'home',
-    tabs: [
-        {
-            tab: "",
-            component: "Welcome"
-        }
-    ],
-    selectedTabIndex: 0,
-    heading: "Welcome",
-}
+// const initialState: AdminRouteState = {
+//     route: 'home',
+//     tabs: [
+//         {
+//             tab: "",
+//             component: "CustomersForm"
+//         }
+//     ],
+//     selectedTabIndex: 0,
+//     heading: "Welcome",
+// }
 
+const initialState: AdminRouteState = {
+    route: 'Customers',
+    tabs: adminRouteData['Customers'].tabs,
+    selectedTabIndex: 0,
+    heading: "Customers",
+}
 /**
  * Slice
  * @see https://redux-toolkit.js.org/api/createslice
@@ -229,5 +248,5 @@ export const { changeRoute, changeTab } = slice.actions
  * Selector
  * @param state PageStateType
  */
-export const adminRouteSelector = (state: RootState): NotificationState => state.adminRoute
+export const adminRouteSelector = (state: RootState): AdminRouteState => state.adminRoute
 

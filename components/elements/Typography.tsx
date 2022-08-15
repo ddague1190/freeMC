@@ -6,9 +6,9 @@ import MuiTypography from '@mui/material/Typography';
 const markClassesMapping = {
   center: {
     h1: '',
-    h2: 'OnePirateTypography-markedH2Center',
-    h3: 'OnePirateTypography-markedH3Center',
-    h4: 'OnePirateTypography-markedH4Center',
+    h2: 'markedH2Center',
+    h3: 'markedH3Center',
+    h4: 'markedH4Center',
     h5: '',
     h6: '',
   },
@@ -16,9 +16,9 @@ const markClassesMapping = {
     h1: '',
     h2: '',
     h3: '',
-    h4: '',
+    h4: 'markedH4Left',
     h5: '',
-    h6: 'OnePirateTypography-markedH6Left',
+    h6: 'markedH6Left',
   },
   none: {
     h1: '',
@@ -52,12 +52,19 @@ const styles = ({ theme }) => ({
     margin: `${theme.spacing(1)} auto 0`,
     backgroundColor: theme.palette.secondary.main,
   },
+  [`& .${markClassesMapping.left.h4}`]: {
+    height: 4,
+    width: 55,
+    display: 'block',
+    margin: `${theme.spacing(0.5)}`,
+    backgroundColor: theme.palette.secondary.main,
+  },
   [`& .${markClassesMapping.left.h6}`]: {
     height: 2,
     width: 28,
     display: 'block',
     marginTop: theme.spacing(0.5),
-    background: 'currentColor',
+    background: 'red',
   },
 });
 
@@ -78,6 +85,7 @@ function Typography(props) {
   if (variant && variant in markClassesMapping[marked]) {
     markedClassName = markClassesMapping[marked][variant];
   }
+
 
   return (
     <MuiTypography variantMapping={variantMapping} variant={variant} {...other}>

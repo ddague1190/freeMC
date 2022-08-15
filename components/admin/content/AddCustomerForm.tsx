@@ -41,10 +41,11 @@ import {
 import getOpenHoursString from "../../../utils/getOpenHoursString";
 import isValidAddress from "../../../utils/isValidAddress";
 import {FORM_ERROR} from "final-form";
-import LinearIndeterminate from "../../../components/elements/Spinner";
+import LinearIndeterminate from "../../elements/Spinner";
 import {email, required} from "../../../utils/emailValidation";
 import {hideNotification} from "../../../store/notification/notification";
 import allTheStates from "../../../data/states";
+import {addCustomer} from "../../../store/customer/action";
 
 interface BoxWithXProps extends BoxProps {
   onlineOnly: boolean;
@@ -100,18 +101,7 @@ const ToggleAdapter = ({input: {onChange, value}, label, ...rest}) => (
   />
 );
 
-const options = {
-  AST: "Atlantic Standard Time (AST)",
-  EST: "Eastern Standard Time (EST)",
-  CST: "Central Standardd Time (CST)",
-  MST: "Mountain Standard Time (MST)",
-  PST: "Pacific Standard Time (PST)",
-  AKST: "Alaskan Standard Time (AKST)",
-  HST: "Hawaii-Aleutian Standard Time (HST)",
-  "UTC-11": "Somoa Standard Time (UTC-11)",
-  "UTC+10": "Chamorro Standard Time (UTC+10)",
-};
-const ShopInfoForm = () => {
+const AddCustomerForm = () => {
   const [sent, setSent] = React.useState(false);
   const [editBasicInfo, setBasicInfo] = React.useState<boolean>(false);
   const [editHours, setEditHours] = React.useState<boolean>(false);
@@ -130,22 +120,9 @@ const ShopInfoForm = () => {
       left: 0,
       behavior: "smooth",
     });
-    // let hours: DayHours = {...initialHours};
-    // daysArray.forEach((day) => {
-    //   hours[day] = values[day];
-    //   delete values[day];
-    // });
 
-    dispatch(editStoreInfoAction({...values, id: storeInfo.id}));
+    dispatch(addCustomer({...values, id: storeInfo.id}));
   };
-
-  React.useEffect(() => {
-    if (storeInfo.success) {
-      setBasicInfo(false);
-      setEditHours(false);
-      setEditAddress(false);
-    }
-  }, [storeInfo.success]);
 
   return (
     <>
@@ -155,50 +132,21 @@ const ShopInfoForm = () => {
         </FormFeedback>
       )}
 
-      <LinearIndeterminate show={storeInfo.isFetching} />
+      <LinearIndeterminate show={false} />
       <Form
         validate={validate}
-        initialValues={{...storeInfo}}
         onSubmit={onSubmit}
         render={({handleSubmit, form, submitting, pristine, values}) => (
           <Box onSubmit={handleSubmit} component="form" noValidate>
-            {/* this is form feedback */}
+
 
             {/* this is basic info part of form */}
             <Paper padding elevation={3} sx={{marginTop: 2}}>
               <Typography padding={1} variant="h5">
-                Basic Info
+                Contact Info
               </Typography>
-              <Collapse in={!editBasicInfo}>
-                <Box padding={2}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Company name</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography>
-                        {storeInfo.companyName || "Please add company name"}
-                      </Typography>
-                    </Grid>
 
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Company email</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography>{storeInfo.companyEmail}</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Company phone</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography>
-                        {storeInfo.companyPhone || "Please add company phone"}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Collapse>
-              <Collapse in={editBasicInfo}>
+
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Field
@@ -206,12 +154,12 @@ const ShopInfoForm = () => {
                       fullWidth
                       component={RFTextField}
                       disabled={submitting || sent}
-                      label="Company name"
+                      label="Customer name"
                       margin="normal"
-                      placeholder="Your shop's name"
-                      name="companyName"
+                      placeholder="Customer name"
+                      name="name"
                       required
-                      size="medium"
+                      size="large"
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -220,150 +168,23 @@ const ShopInfoForm = () => {
                       fullWidth
                       component={RFTextField}
                       disabled={submitting || sent}
-                      label="Company email"
+                      label="Email"
                       margin="normal"
                       name="companyEmail"
                       required
-                      size="medium"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Company phone"
-                      margin="normal"
-                      name="companyPhone"
-                      required
-                      size="medium"
+                      size="large"
                     />
                   </Grid>
                 </Grid>
-              </Collapse>
-              <Collapse in={!editBasicInfo}>
-                <Chip
-                  label="Edit"
-                  sx={{position: "absolute", top: 2, right: 2, margin: 2}}
-                  onClick={(e) => setBasicInfo(true)}
-                />
-              </Collapse>
+
+
             </Paper>
 
-            {/* this is hours of operation for brick and morter shops */}
-            <Paper padding elevation={3} sx={{marginTop: 2}}>
-              <Typography padding={1} variant="h5">
-                Hours of operation
-              </Typography>
-
-              <Collapse in={editHours}>
-                <Grid container>
-                  <Grid item xs={12} sm={12}>
-                    <Field
-                      type="checkbox"
-                      autoFocus
-                      component={Toggle}
-                      label="Online only shop?"
-                      margin="normal"
-                      name="onlineOnly"
-                      required
-                      size="medium"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4} mt={2}>
-                    <Typography variant="body1" color="primary">
-                      Please specify your time zone
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Field
-                      select
-                      fullWidth
-                      name="timeZone"
-                      label="Time zone"
-                      size="medium"
-                      margin="normal"
-                      required
-                      component={RFTextField}>
-                      {Object.entries(options).map(([key, value], index) => (
-                        <MenuItem key={index} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Grid>
-                  {daysArray.map((day, index) => {
-                    return (
-                      <ToggleButton
-                        key={index}
-                        stripe={index % 2 === 0}
-                        hours={storeInfo.hours[day]}
-                        dayOfWeek={day}
-                      />
-                    );
-                  })}
-                </Grid>
-              </Collapse>
-              <Collapse in={!editHours}>
-                <TableContainer component={Box} sx={{marginTop: 2, padding: 2}}>
-                  <Table size="small">
-                    <TableBody>
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          Time zone
-                        </TableCell>
-                        <TableCell>
-                          {storeInfo.timeZone || "Please specify time zone"}
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          Online only store?
-                        </TableCell>
-                        <TableCell>
-                          {storeInfo.onlineOnly ? "True" : "False"}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-
-                <XonTopBox onlineOnly={storeInfo.onlineOnly} padding={2}>
-                  <TableContainer component={Box} sx={{marginBlock: 2}}>
-                    <Table sx={{minWidth: 100}} size="small">
-                      <TableBody>
-                        {daysArray.map((day, index) => {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell component="th" scope="row">
-                                {day}
-                              </TableCell>
-                              <TableCell>
-                                {getOpenHoursString(storeInfo.hours[day])}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </XonTopBox>
-
-                <Chip
-                  label="Edit"
-                  sx={{position: "absolute", top: 2, right: 2, margin: 2}}
-                  onClick={(e) => setEditHours(true)}
-                />
-              </Collapse>
-            </Paper>
 
             {/* this is address part of form */}
 
             <Paper padding elevation={3} sx={{marginTop: 2}}>
-              <Typography padding={1} variant="h5">
-                Shop address
-              </Typography>
+    
               <Collapse in={editAddress}>
                 <Grid container columnSpacing={1}>
                   <Grid item xs={12}>
@@ -496,4 +317,4 @@ const ShopInfoForm = () => {
   );
 };
 
-export default ShopInfoForm;
+export default AddCustomerForm;

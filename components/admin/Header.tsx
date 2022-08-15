@@ -17,7 +17,7 @@ import {
   adminRouteSelector,
   changeTab,
 } from "../../store/admin-route/admin-route";
-import slugify from "slugify";
+
 
 const lightColor = "rgba(255, 255, 255, 0.7)";
 

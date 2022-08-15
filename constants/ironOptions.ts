@@ -8,3 +8,8 @@ export const ironOptions = {
         secure: Env.NODE_ENV === 'production',
     }
 }
+
+export function logoutRoute(req, res, session) {
+    req.session.destroy();
+    res.send({ ok: true });
+}

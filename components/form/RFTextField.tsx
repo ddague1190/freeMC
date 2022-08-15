@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FieldRenderProps } from 'react-final-form';
 import TextField, { OnePirateTextFieldProps } from '../elements/TextField';
-
+ 
 function RFTextField(
   props: OnePirateTextFieldProps & FieldRenderProps<string, HTMLElement>,
 ) {

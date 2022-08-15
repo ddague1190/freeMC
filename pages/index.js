@@ -28,7 +28,7 @@ function HomePage(props) {
 
 export async function getServerSideProps(context) {
 
-    return {
+  return {
     props: {
     }
   }

@@ -12,10 +12,10 @@ import FormButton from "../components/form/FormButton";
 import FormFeedback from "../components/form/FormFeedback";
 import {useRouter} from "../node_modules/next/router";
 import axios from "axios";
-import { FORM_ERROR } from 'final-form';
-import { useDispatch } from 'react-redux';
-import { showNotification } from "../store/notification/notification";
-import { setUserInfo } from "../store/user-info/user-info";
+import {FORM_ERROR} from "final-form";
+import {useDispatch} from "react-redux";
+import {showNotification} from "../store/notification/notification";
+import {setUserInfo} from "../store/user-info/user-info";
 
 const config = {
   headers: {
@@ -42,16 +42,11 @@ export default function SignIn() {
     setSent(true);
     try {
       const response = await axios.post("/api/sign-in/", {values}, config);
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
-
         dispatch(setUserInfo(response.data.user));
         setTimeout(() => {
-          dispatch(
-            showNotification(
-              "Authentication successful."
-            )
-          );
+          dispatch(showNotification("Authentication successful."));
         }, 1000);
         router.push("/admin");
       } else {
@@ -85,7 +80,7 @@ export default function SignIn() {
             <Link href="/sign-up">Sign Up here</Link>
           </Typography>
         </>
- 
+
         <Form
           onSubmit={handleSubmit}
           subscription={{submitting: true}}
@@ -96,6 +91,15 @@ export default function SignIn() {
               onSubmit={handleSubmit2}
               noValidate
               sx={{mt: 6}}>
+              <FormSpy subscription={{submitError: true}}>
+                {({submitError}) =>
+                  submitError ? (
+                    <FormFeedback error sx={{mt: 2}}>
+                      {submitError}
+                    </FormFeedback>
+                  ) : null
+                }
+              </FormSpy>
               <Field
                 autoComplete="email"
                 autoFocus
@@ -106,7 +110,7 @@ export default function SignIn() {
                 margin="normal"
                 name="email"
                 required
-                size="large" 
+                size="large"
               />
               <Field
                 fullWidth
@@ -120,15 +124,7 @@ export default function SignIn() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{submitError: true}}>
-                {({submitError}) =>
-                  submitError ? (
-                    <FormFeedback error sx={{mt: 2}}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
+
               <FormButton
                 sx={{mt: 3, mb: 2}}
                 disabled={submitting || sent}

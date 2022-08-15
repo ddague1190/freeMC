@@ -1,4 +1,4 @@
 import { withIronSessionApiRoute } from "iron-session/next";
-import { ironOptions } from "../../constants/ironOptions";
+import { ironOptions, logoutRoute } from "../../constants/ironOptions";
 
 export default withIronSessionApiRoute(logoutRoute, ironOptions);
