@@ -30,6 +30,6 @@ export const storeInfoSlice = createSlice({
 
 export const storeInfoReducer = storeInfoSlice.reducer
 
-export const storeInfoSelector = (state: RootState): NotificationState => state.storeInfo
+export const storeInfoSelector = (state: RootState): StoreInfoState => state.storeInfo
 
 export const { setStoreInfo } = storeInfoSlice.actions

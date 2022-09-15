@@ -17,9 +17,16 @@ import {Form, Field, FormSpy} from "react-final-form";
 import FormFeedback from "../../form/FormFeedback";
 import RFTextField from "../../form/RFTextField";
 import AddCustomerForm from "./AddCustomerForm";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  adminRouteSelector,
+  changeTab,
+} from "../../../store/admin-route/admin-route";
 
 export default function AllCustomerRecords() {
   const [addNewCustomer, setAddNewCustomer] = React.useState(false);
+  const dispatch = useDispatch();
+
   return (
     <>
       <Paper
@@ -53,18 +60,30 @@ export default function AllCustomerRecords() {
               <Grid item>
                 <Button variant="contained">Search customers</Button>
               </Grid>
-              <Grid item>
-                <Button variant="contained" color="primary">
-                  Add new customer
-                </Button>
-              </Grid>
+              {!addNewCustomer && (
+                <Grid item xs={6} md={4}>
+                  <Button
+                    onClick={() => dispatch(changeTab({index: 2}))}
+                    color="secondary">
+                    New customer
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Toolbar>
         </AppBar>
       </Paper>
-      <Collapse in={!addNewCustomer}>
-        <Paper sx={{maxWidth: 936, margin: "auto", overflow: "hidden", marginBottom: 2 }}>
-          <AddCustomerForm />
+      <Collapse in={addNewCustomer}>
+        <Paper
+          sx={{
+            maxWidth: 936,
+            margin: "auto",
+            overflow: "hidden",
+            marginBottom: 2,
+          }}>
+          <AddCustomerForm
+            cancelAddNewCustomer={() => setAddNewCustomer(false)}
+          />
         </Paper>
       </Collapse>
 

@@ -6,13 +6,19 @@ import NewUserForm from "../../components/admin/content/NewUserForm";
 import ShopInfoForm from "../../components/admin/content/ShopInfoForm";
 import AllCustomerRecords from "../../components/admin/content/AllCustomersRecords";
 import AddCustomerForm from "../../components/admin/content/AddCustomerForm";
+import { addCustomer } from "../customer/action";
+import { CustomerState } from "../customer/state";
+import CustomerDetailView from "../../components/admin/content/CustomerDetailView";
+import SelectedMotorcycle from "../../components/admin/content/SelectedMotorcycle";
 
 export const COMPONENT_MAP = {
     'Welcome': Welcome,
     'NewUserForm': NewUserForm,
     'ShopInfoForm': ShopInfoForm,
     'AllCustomerRecords': AllCustomerRecords,
-    'AddCustomerForm': AddCustomerForm
+    'AddCustomerForm': AddCustomerForm,
+    'CustomerDetailView': CustomerDetailView,
+    'SelectedMotorcycle': SelectedMotorcycle
 
 }
 const adminRouteData = {
@@ -47,7 +53,7 @@ const adminRouteData = {
             },
             {
                 tab: "Detail view",
-                component: "AllCustomerRecords"
+                component: "CustomerDetailView"
             },
             {
                 tab: "New",
@@ -65,6 +71,10 @@ const adminRouteData = {
             {
                 tab: "Completed",
                 component: "NewUserForm"
+            },
+            {
+                tab: "Selected",
+                component: "SelectedMotorcycle"
             }
         ]
     },
@@ -206,7 +216,7 @@ const initialState: AdminRouteState = {
  * @see https://redux-toolkit.js.org/api/createslice
  */
 const slice = createSlice({
-    name: FeatureKey.NOTIFICATION,
+    name: FeatureKey.ADMINROUTE,
     initialState,
     reducers: {
         changeRoute: (
@@ -231,6 +241,15 @@ const slice = createSlice({
                 selectedTabIndex: index,
             }
         }
+    },
+    extraReducers: (builder : ActionReducerMapBuilder<any>) => {
+        builder
+        .addCase(addCustomer.fulfilled, (state: CustomerState, action: PayloadAction<CustomerState>) => { 
+            return {
+                ...state,
+                selectedTabIndex: 0
+            }
+        })
     }
 })
 

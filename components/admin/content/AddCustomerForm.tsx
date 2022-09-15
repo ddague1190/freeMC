@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactPropTypes } from "react";
 import {Form, Field, FormSpy} from "react-final-form";
 import FormFeedback from "../../form/FormFeedback";
 import TextField from "@mui/material/TextField";
@@ -46,6 +46,10 @@ import {email, required} from "../../../utils/emailValidation";
 import {hideNotification} from "../../../store/notification/notification";
 import allTheStates from "../../../data/states";
 import {addCustomer} from "../../../store/customer/action";
+import {
+  adminRouteSelector,
+  changeTab,
+} from "../../../store/admin-route/admin-route";
 
 interface BoxWithXProps extends BoxProps {
   onlineOnly: boolean;
@@ -103,9 +107,7 @@ const ToggleAdapter = ({input: {onChange, value}, label, ...rest}) => (
 
 const AddCustomerForm = () => {
   const [sent, setSent] = React.useState(false);
-  const [editBasicInfo, setBasicInfo] = React.useState<boolean>(false);
-  const [editHours, setEditHours] = React.useState<boolean>(false);
-  const [editAddress, setEditAddress] = React.useState<boolean>(false);
+
   const dispatch = useDispatch();
   const storeInfo = useSelector(storeInfoSelector);
   const daysArray = Object.values(Days) as Array<keyof typeof Days>;
@@ -121,11 +123,17 @@ const AddCustomerForm = () => {
       behavior: "smooth",
     });
 
-    dispatch(addCustomer({...values, id: storeInfo.id}));
+    dispatch(addCustomer({...values, address: {...values.address, name: values.name}}));
   };
 
   return (
-    <>
+    <Paper
+    sx={{
+      maxWidth: 936,
+      margin: "auto",
+      overflow: "hidden",
+      marginBottom: 2,
+    }}>
       {storeInfo.errorMessage && (
         <FormFeedback error sx={{mt: 2}}>
           {storeInfo.errorMessage}
@@ -137,170 +145,136 @@ const AddCustomerForm = () => {
         validate={validate}
         onSubmit={onSubmit}
         render={({handleSubmit, form, submitting, pristine, values}) => (
-          <Box onSubmit={handleSubmit} component="form" noValidate>
-
-
+          <Box 
+          onSubmit={handleSubmit} 
+          component="form" 
+          noValidate
+          padding={2}
+          >
             {/* this is basic info part of form */}
-            <Paper padding elevation={3} sx={{marginTop: 2}}>
+
               <Typography padding={1} variant="h5">
-                Contact Info
+                New Customer Contact Info
               </Typography>
 
-
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Customer name"
-                      margin="normal"
-                      placeholder="Customer name"
-                      name="name"
-                      required
-                      size="large"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Email"
-                      margin="normal"
-                      name="companyEmail"
-                      required
-                      size="large"
-                    />
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Customer name"
+                    margin="normal"
+                    placeholder="Customer name"
+                    name="name"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Customer email"
+                    margin="normal"
+                    name="email"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Customer phone"
+                    margin="normal"
+                    name="phone"
+                    required
+                    size="medium"
+                  />
                 </Grid>
 
-
-            </Paper>
-
-
+                <Grid item xs={12} md={8}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Street Address"
+                    placeholder="Street address"
+                    margin="normal"
+                    name="address.streetAddress"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Unit Number"
+                    placeholder="Unit or Suite"
+                    margin="normal"
+                    name="address.unitNumber"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+                <Grid item xs={6} md={6}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="City"
+                    placeholder="City"
+                    margin="normal"
+                    name="address.city"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+                <Grid item xs={6} md={3} pt={2.5}>
+                  <Field
+                    sx={{marginTop: "15px"}}
+                    select
+                    fullWidth
+                    name="address.state"
+                    label="State"
+                    size="medium"
+                    required
+                    component={RFTextField}>
+                    {allTheStates.map((state, index) => (
+                      <MenuItem key={index} value={state.value}>
+                        {state.label}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </Grid>
+                <Grid item xs={6} md={3}>
+                  <Field
+                    autoFocus
+                    fullWidth
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    label="Zip code"
+                    placeholder="Zip code"
+                    margin="normal"
+                    name="address.zip"
+                    required
+                    size="medium"
+                  />
+                </Grid>
+              </Grid>
             {/* this is address part of form */}
 
-            <Paper padding elevation={3} sx={{marginTop: 2}}>
-    
-              <Collapse in={editAddress}>
-                <Grid container columnSpacing={1}>
-                  <Grid item xs={12}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      size="medium"
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Shipping name"
-                      placeholder="Your company name or another name"
-                      margin="normal"
-                      name="address.name"
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Street Address"
-                      placeholder="Street address"
-                      margin="normal"
-                      name="address.streetAddress"
-                      required
-                      size="medium"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Unit Number"
-                      placeholder="Unit or Suite"
-                      margin="normal"
-                      name="address.unitNumber"
-                      required
-                      size="medium"
-                    />
-                  </Grid>
-                  <Grid item xs={6} md={6}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="City"
-                      placeholder="City"
-                      margin="normal"
-                      name="address.city"
-                      required
-                      size="medium"
-                    />
-                  </Grid>
-                  <Grid item xs={6} md={3} pt={2.5}>
-                    <Field
-                      sx={{margin: "-4px"}}
-                      select
-                      fullWidth
-                      name="address.state"
-                      label="State"
-                      size="medium"
-                      required
-                      component={RFTextField}>
-                      {allTheStates.map((state, index) => (
-                        <MenuItem key={index} value={state.value}>
-                          {state.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Grid>
-                  <Grid item xs={6} md={3}>
-                    <Field
-                      autoFocus
-                      fullWidth
-                      component={RFTextField}
-                      disabled={submitting || sent}
-                      label="Zip code"
-                      placeholder="Zip code"
-                      margin="normal"
-                      name="address.zip"
-                      required
-                      size="medium"
-                    />
-                  </Grid>
-                </Grid>
-              </Collapse>
-              <Collapse in={!editAddress}>
-                <Box m={2}>
-                  {isValidAddress(storeInfo.address) ? (
-                    <address>
-                      {storeInfo.address.name}
-                      <br />
-                      {storeInfo.address.streetAddress}{" "}
-                      {storeInfo.address.unitNumber}
-                      <br />
-                      {storeInfo.address.city}, {storeInfo.address.state}{" "}
-                      {storeInfo.address.zip}
-                      <br />
-                      USA
-                    </address>
-                  ) : (
-                    "Please add your shop address"
-                  )}
-                </Box>
-                <Chip
-                  label="Edit"
-                  sx={{position: "absolute", top: 2, right: 2, margin: 2}}
-                  onClick={(e) => setEditAddress(true)}
-                />
-              </Collapse>
-            </Paper>
             <Button
               sx={{margin: 2}}
               color="secondary"
@@ -310,10 +284,19 @@ const AddCustomerForm = () => {
               disabled={submitting}>
               Submit changes
             </Button>
+            <Button
+              onClick={()=>dispatch(changeTab({index: 0}))}
+              sx={{margin: 2}}
+              color="secondary"
+              size="large"
+              type="submit"
+              >
+              Cancel add new customer
+            </Button>
           </Box>
         )}
       />
-    </>
+    </Paper>
   );
 };
 

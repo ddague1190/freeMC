@@ -1,54 +1,86 @@
 import * as React from "react";
-import {DataGrid, GridColDef, GridValueGetterParams} from "@mui/x-data-grid";
+import {DataGrid, GridColDef, GridValueGetterParams, GridEventListener, GridApi} from "@mui/x-data-grid";
+import {useDispatch, useSelector} from "react-redux";
+import { changeTab } from "../../store/admin-route/admin-route";
+import {selectors} from "../../store/customer/selector";
+import {customersSelector, setSelectedId} from "../../store/customer/reducer";
+import Button from "./Button";
+import { fetchCustomerDetailAction } from "../../store/customer-detail/action";
+import { fetchAllCustomersBikes } from "../../store/customer-bikes/action";
 
-const columns: GridColDef[] = [
-  {field: "identifier", headerName: "ID", width: 70},
-  {field: "name", headerName: "Name", width: 130},
-  {
-    field: "email",
-    headerName: "Email",
-    type: "string",
-    width: 90,
-  },
-  {
-    field: "phone",
-    headerName: "Phone",
-    description: "This column has a value getter and is not sortable.",
-    width: 100,
-    // sortable: false,
-    // width: 160,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: "activeJob",
-    headerName: "Active Job",
-    type: "number",
-    width: 90,
-  },
-];
-
-const rows = [
-  {id: 1, lastName: "Snow", firstName: "Jon", age: 35},
-  {id: 2, lastName: "Lannister", firstName: "Cersei", age: 42},
-  {id: 3, lastName: "Lannister", firstName: "Jaime", age: 45},
-  {id: 4, lastName: "Stark", firstName: "Arya", age: 16},
-  {id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null},
-  {id: 6, lastName: "Melisandre", firstName: null, age: 150},
-  {id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44},
-  {id: 8, lastName: "Frances", firstName: "Rossini", age: 36},
-  {id: 9, lastName: "Roxie", firstName: "Harvey", age: 65},
-];
 
 export default function CustomerDataTable() {
+
+  const dispatch = useDispatch();
+
+  const columns: GridColDef[] = [
+    {field: "identifier", headerName: "ID", width: 70},
+    {field: "name", headerName: "Name", width: 130},
+    {
+      field: "email",
+      headerName: "Email",
+      type: "string",
+      width: 90,
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      description: "This column has a value getter and is not sortable.",
+      width: 100,
+      // sortable: false,
+      // width: 160,
+      // valueGetter: (params: GridValueGetterParams) =>
+      //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    },
+    {
+      field: "activeJob",
+      headerName: "Active Job",
+      type: "number",
+      width: 90,
+    },
+    {
+      field: "viewDetails",
+      headerName: "View Details",
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
+          dispatch(fetchCustomerDetailAction(params.row.identifier));
+          dispatch(fetchAllCustomersBikes(params.row.identifier));
+          dispatch(changeTab({index: 1}))
+          // const api: GridApi = params.api;
+          // const thisRow: any= {};
+          
+          // api
+          //   .getAllColumns()
+          //   .forEach(
+          //     (c) => (thisRow[c.field] = params.row[c.field])
+          //   );
+  
+          // return alert(JSON.stringify(thisRow, null, 4));
+        };
+  
+        return <Button variant='contained' onClick={onClick}>Select</Button>;
+      }
+    },
+  
+  ];
+  
+  const handleRowClick: GridEventListener<'rowClick'> = (params) => {
+    console.log(params.row);
+  };
+  const customersState = useSelector(customersSelector);
+  const customers = selectors.selectAll(customersState);
+
   return (
     <div style={{height: 400, width: "100%"}}>
       <DataGrid
+        getRowId={row => row.identifier}
         experimentalFeatures={{newEditingApi: true}}
-        rows={rows}
+        rows={customers}
         columns={columns}
         pageSize={5}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[5]} 
       />
     </div>
   );

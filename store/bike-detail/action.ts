@@ -27,14 +27,38 @@ const config = {
 
 
 /**
- * Edit todo action
+ * Fetch customer details action
  */
-export const editStoreInfoAction = createAsyncThunk(
-    `${FeatureKey.STOREINFO}/edit`,
-    async (storeInfo: StoreInfoPayload, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
-        const url = `/api/store-info/`
+export const getBikeDetailAction = createAsyncThunk(
+    'getBikeDetail',
+    async (id: number, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+        const url = `/api/bike-detail/${id}`
+
         try {
-            const response = await axios.patch(url, { storeInfo }, config);
+            const response = await axios.get(url);
+            if (response.status !== 200) {
+                return rejectWithValue(`Status code ${response.status}`);
+            }
+
+            return fulfillWithValue(response.data)
+        } catch (error) {
+            const errData = error.response?.data;
+            throw rejectWithValue(errData.message)
+        }
+    }
+)
+
+
+
+/**
+ * Edit customer details action
+ */
+export const editBikeDetailAction = createAsyncThunk(
+    'editBikeDetails',
+    async ({ id, values }, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+        const url = `/api/bike-detail/${id}`
+        try {
+            const response = await axios.patch(url, values, config);
             if (response.status !== 200) {
                 return rejectWithValue(`Status code ${response.status}`);
             }
@@ -45,5 +69,3 @@ export const editStoreInfoAction = createAsyncThunk(
         }
     }
 )
-
-

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { Customer } from "./state";
+import { CustomerBikesState } from "./state";
 import { FeatureKey } from "../featureKey";
 import axios from 'axios';
 
@@ -14,12 +14,13 @@ const config = {
  * Fetch all customers
 */
 
-export const fetchAllCustomers = createAsyncThunk(
-    `${FeatureKey.CUSTOMERS}/fetchAll`,
-    async (customer: Customer, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
-        const url = `/api/customers`
+export const fetchAllCustomersBikes = createAsyncThunk(
+    `${FeatureKey.CUSTOMERBIKES}/fetchAll`,
+    async (customerIdentifier: number, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+
+        const url = `/api/customer-bikes/${customerIdentifier}`
         try {
-            const response = await axios.post(url)
+            const response = await axios.get(url)
             // if (response.status !== 200) {
             //     return rejectWithValue(`Status code ${response.status}`);
             // }
@@ -36,12 +37,12 @@ export const fetchAllCustomers = createAsyncThunk(
  * Edit customers
 */
 
-export const editCustomer = createAsyncThunk(
-    `${FeatureKey.CUSTOMERS}/edit`,
-    async (customer: Customer, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
-        const url = `/api/customers`
+export const editCustomerBikes = createAsyncThunk(
+    `${FeatureKey.CUSTOMERBIKES}/edit`,
+    async (customerBike: any, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+        const url = `/api/customer-bikes`
         try {
-            const response = await axios.patch(url, { customer }, config)
+            const response = await axios.patch(url, { customerBike }, config)
             if (response.status !== 200) {
                 return rejectWithValue(`Status code ${response.status}`);
             }
@@ -57,17 +58,17 @@ export const editCustomer = createAsyncThunk(
  * Add customer
 */
 
-export const addCustomer = createAsyncThunk(
-    `${FeatureKey.CUSTOMERS}/add`,
-    async (customer: Customer, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
-        const url = `/api/customers/`
+export const addCustomerBikes = createAsyncThunk(
+    `${FeatureKey.CUSTOMERBIKES}/add`,
+    async (customerBike: any, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+        const url = `/api/customer-bikes/${customerBike.customerIdentifier}`
 
         try {
-            const response = await axios.post(url, { customer }, config)
-            if (response.status !== 201) {
+            const response = await axios.post(url, { customerBike }, config)
+            console.log(response)
+            if (response.status !== 200) {
                 return rejectWithValue(`Status code ${response.status}`);
             }
-            console.log(response)
             return fulfillWithValue(response.data)
         } catch (error) {
             const errData = error.response?.data;
@@ -80,8 +81,8 @@ export const addCustomer = createAsyncThunk(
  * Remove customer
 */
 
-export const removeCustomer = createAsyncThunk(
-    `${FeatureKey.CUSTOMERS}/delete`,
+export const removeCustomerBikes = createAsyncThunk(
+    `${FeatureKey.CUSTOMERBIKES}/delete`,
     async (arg: { id: number }) => {
         const { id } = arg
         const url = `/api/customers`

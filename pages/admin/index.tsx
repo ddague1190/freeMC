@@ -18,6 +18,8 @@ import {setStoreInfo} from "../../store/store-info/reducer";
 import SnackBar from "../../components/elements/SnackBar";
 import {useDispatch, useSelector} from "react-redux";
 import {notificationSelector} from "../../store/notification/notification";
+import { setCustomers } from "../../store/customer/reducer";
+
 const drawerWidth = 256;
 
 const AdminPage = () => {
@@ -69,7 +71,7 @@ const AdminPage = () => {
 export const getServerSideProps = withIronSessionSsr(
   wrapper.getServerSideProps((store) => async ({req, res, ...etc}) => {
     const user = req.session.user;
-    if (!user | !user.id) {
+    if (!user | !user?.id) {
       return {
         notFound: true,
       };
@@ -78,10 +80,24 @@ export const getServerSideProps = withIronSessionSsr(
     let storeInfo = await db
       .collection("stores")
       .findOne({owner: new ObjectId(user.id)});
+    let allCustomers = await db
+      .collection("customers")
+      .find(
+        {store: storeInfo._id},
+        {projection: {email: 1, phone: 1, name: 1, identifier: 1, activeJob: 1, store: 1, _id: false}}
+      )
+      .toArray();
+
+    allCustomers = allCustomers.map(customer=>{
+      return {...customer, store: customer.store.toString()}
+    })
+    
+
     storeInfo.id = storeInfo._id.toString();
     delete storeInfo.owner;
     delete storeInfo._id;
-    store.dispatch(setStoreInfo(storeInfo));
+    await store.dispatch(setStoreInfo(storeInfo));
+    await store.dispatch(setCustomers(allCustomers)); 
   }),
   ironOptions
 );

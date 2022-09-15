@@ -1,15 +1,15 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {FeatureKey} from "../featureKey";
-import {RootState} from "../reducers";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FeatureKey } from "../featureKey";
+import { RootState } from "../reducers";
 
 export enum Days {
-  Sunday='SUNDAY',
-  Monday='MONDAY',
-  Tuesday='TUESDAY',
-  Wednesday='WEDNESDAY',
-  Thursday='THURSDAY',
-  Friday='FRIDAY',
-  Saturday='SATURDAY',
+  Sunday = 'SUNDAY',
+  Monday = 'MONDAY',
+  Tuesday = 'TUESDAY',
+  Wednesday = 'WEDNESDAY',
+  Thursday = 'THURSDAY',
+  Friday = 'FRIDAY',
+  Saturday = 'SATURDAY',
 }
 
 export interface Address {
@@ -36,6 +36,7 @@ export type StoreInfoPayload = {
   id?: string;
   timeZone?: string,
   companyName?: string;
+  companyPhone?: string;
   companyEmail?: string;
   address?: Address;
   hours?: DayHours;
@@ -53,6 +54,7 @@ export type StoreInfoState = {
   success: boolean | null,
   companyName?: string;
   companyEmail?: string;
+  companyPhone?: string;
   address?: Address;
   hours?: DayHours;
   onlineOnly?: boolean;
@@ -77,6 +79,7 @@ export const initialState: StoreInfoState = {
   success: null,
   companyName: "",
   companyEmail: "",
+  companyPhone: "",
   address: {
     name: "",
     streetAddress: "",

@@ -85,7 +85,7 @@ function TextField(props: OnePirateTextFieldProps) {
     InputProps = {},
     InputLabelProps,
     noBorder,
-    size = "xlarge",
+    size = "large",
     SelectProps,
     ...other
   } = props;

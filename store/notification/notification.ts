@@ -3,6 +3,9 @@ import { FeatureKey } from "../featureKey";
 import { RootState } from "../reducers";
 import { StoreInfoState } from "../store-info/state";
 import { editStoreInfoAction } from "../store-info/action";
+import { editCustomerDetailAction } from "../customer-detail/action";
+import { addCustomer } from "../customer/action";
+import { CustomerState } from "../customer/state";
 /**
  * Payload
  */
@@ -51,6 +54,18 @@ const slice = createSlice({
         .addCase(editStoreInfoAction.fulfilled, (state: StoreInfoState, action: PayloadAction<StoreInfoState>) => { 
             return {
                 messageNotification: 'Update successful',
+                isShownNotification: true
+            }
+        })
+        .addCase(editCustomerDetailAction.fulfilled, (state: StoreInfoState, action: PayloadAction<StoreInfoState>) => { 
+            return {
+                messageNotification: 'Update successful',
+                isShownNotification: true
+            }
+        })
+        .addCase(addCustomer.fulfilled, (state: CustomerState, action: PayloadAction<CustomerState>) => { 
+            return {
+                messageNotification: 'Customer added',
                 isShownNotification: true
             }
         })
